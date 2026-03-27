@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EURO DIESEL - SISTEMA PROFISSIONAL</title>
+    <title>EURO DIESEL - CONTROLE TOTAL</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         :root {
             --BG: #0D1117; --SIDE: #161B22; --CARD: #1C2128; --PRIMARY: #2F81F7;
             --SUCCESS: #238636; --DANGER: #F85149; --TEXT: #C9D1D9; --BORDER: #30363D;
-            --PURPLE: #8957E5;
+            --PURPLE: #8957E5; --ORANGE: #D29922;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
         body { font-family: 'Segoe UI', Impact, sans-serif; margin: 0; background: var(--BG); color: var(--TEXT); display: flex; height: 100vh; overflow: hidden; }
@@ -40,7 +40,7 @@
         table { width: 100%; border-collapse: collapse; min-width: 500px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--BORDER); font-size: 0.85rem; }
 
-        .MODAL { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .MODAL { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .MODAL-CONTENT { background: var(--CARD); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid var(--BORDER); }
         input, select { width: 100%; padding: 15px; background: #0D1117; border: 1px solid var(--BORDER); border-radius: 8px; color: WHITE; margin-bottom: 15px; font-weight: bold; }
         .HIDDEN { display: none !important; }
@@ -50,17 +50,17 @@
 
     <nav id="APP-SIDE" class="SIDEBAR HIDDEN">
         <div style="font-size: 1.6rem; font-weight: 900; color: var(--PRIMARY); margin-bottom: 30px; text-align: center;">EURO DIESEL</div>
-        <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">MEU PAINEL</div></div>
+        <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">DASHBOARD</div></div>
         
         <div id="MASTER-TOOLS" class="HIDDEN">
             <div class="ADMIN-LABEL" style="font-size: 0.65rem; color: #555; margin: 20px 0 10px 10px; font-weight: 900;">CONTROLE MASTER</div>
-            <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">analytics</span> <div class="NAV-TEXT">VISÃO GERAL</div></div>
-            <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">vpn_key</span> <div class="NAV-TEXT">GERAR TOKEN</div></div>
+            <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">analytics</span> <div class="NAV-TEXT">MÉTRICAS TOTAIS</div></div>
+            <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">vpn_key</span> <div class="NAV-TEXT">NOVO TOKEN</div></div>
             <div id="LISTA-FUNCS"></div>
         </div>
 
         <div style="margin-top: auto;">
-            <div class="NAV-ITEM" onclick="openModal('MODAL-PERFIL')"><span class="material-icons-outlined">manage_accounts</span> <div class="NAV-TEXT">EDITAR PERFIL</div></div>
+            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">settings</span> <div class="NAV-TEXT">MEU PERFIL</div></div>
             <div class="NAV-ITEM" style="color: var(--DANGER)" onclick="location.reload()"><span class="material-icons-outlined">logout</span> <div class="NAV-TEXT">SAIR</div></div>
         </div>
     </nav>
@@ -69,7 +69,10 @@
         <div class="CONTAINER">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                 <h1 id="V-TITLE" style="margin:0; font-size: 1.8rem;">DASHBOARD</h1>
-                <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + LANÇAR</button>
+                <div style="display:flex; gap:10px;">
+                    <button id="BTN-EDIT-META" class="BTN-MASTER HIDDEN" style="background: var(--ORANGE); width: auto; padding: 12px;" onclick="abrirEdicaoMetas()"><span class="material-icons-outlined">edit</span></button>
+                    <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + LANÇAR</button>
+                </div>
             </div>
 
             <div class="STATS-GRID">
@@ -92,47 +95,58 @@
             <h1 style="color: var(--PRIMARY); text-align:center; margin-bottom: 30px;">EURO DIESEL</h1>
             <input type="text" id="U-LOGIN" placeholder="USUÁRIO">
             <input type="password" id="P-LOGIN" placeholder="SENHA">
-            <button id="BTN-ENTRAR" class="BTN-MASTER" onclick="tentarLogin()">ENTRAR (ENTER)</button>
-            <button class="BTN-MASTER" style="background:transparent; border:1px solid var(--SUCCESS); color:var(--SUCCESS); margin-top:15px;" onclick="switchAuth('REG-BOX')">CADASTRAR-SE</button>
+            <button id="BTN-ENTRAR" class="BTN-MASTER" onclick="tentarLogin()">ENTRAR NO SISTEMA</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:#555; cursor:pointer;" onclick="switchAuth('REG-BOX')">NÃO TEM CONTA? <b>CADASTRE-SE</b></p>
         </div>
         <div id="REG-BOX" class="MODAL-CONTENT HIDDEN">
             <h2 style="text-align:center; color: var(--SUCCESS);">CADASTRO</h2>
             <input type="text" id="U-REG" placeholder="NOME">
-            <input type="password" id="P-REG" placeholder="SENHA">
-            <input type="text" id="T-REG" placeholder="TOKEN">
-            <button class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">FINALIZAR</button>
-            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:15px; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR</button>
+            <input type="password" id="P-REG" placeholder="CRIE UMA SENHA">
+            <input type="text" id="T-REG" placeholder="COLE O TOKEN">
+            <button id="BTN-CADASTRAR" class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">FINALIZAR CADASTRO</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:#555; cursor:pointer;" onclick="window.open('https://wa.me/SEUNUMERO?text=PEDIR%20TOKEN')">NÃO TENHO TOKEN (PEDIR AGORA)</p>
+            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:10px; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR</button>
         </div>
     </div>
 
     <div id="MODAL-PERFIL" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>MEU PERFIL</h3>
-            <input type="text" id="P-NOME" placeholder="NOVO NOME">
-            <input type="password" id="P-SENHA" placeholder="NOVA SENHA">
+            <h3 id="PERFIL-TIT">MEU PERFIL</h3>
+            <input type="text" id="P-NOME" placeholder="NOME">
+            <input type="text" id="P-SENHA" placeholder="SENHA">
             <button class="BTN-MASTER" onclick="salvarPerfil()">SALVAR ALTERAÇÕES</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">CANCELAR</button>
+            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">FECHAR</button>
+        </div>
+    </div>
+
+    <div id="MODAL-METAS" class="MODAL HIDDEN">
+        <div class="MODAL-CONTENT">
+            <h3>EDITAR METAS DO USUÁRIO</h3>
+            <label>SERVIÇOS R$</label><input type="number" id="EM-S">
+            <label>PEÇAS R$</label><input type="number" id="EM-P">
+            <button class="BTN-MASTER" style="background:var(--SUCCESS)" onclick="confirmarEdicaoMetas()">ATUALIZAR METAS</button>
+            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-METAS')">CANCELAR</button>
         </div>
     </div>
 
     <div id="MODAL-ADD" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>NOVA VENDA</h3>
+            <h3>NOVO LANÇAMENTO</h3>
             <select id="IN-TIPO"><option value="SERVIÇO">SERVIÇO</option><option value="PEÇA">PEÇA</option></select>
             <input type="text" id="IN-DESC" placeholder="DESCRIÇÃO">
             <input type="number" id="IN-VAL" placeholder="VALOR R$">
-            <button id="BTN-SALVAR-ITEM" class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR (ENTER)</button>
+            <button id="BTN-SALVAR-ITEM" class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR VENDA</button>
             <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-ADD')">FECHAR</button>
         </div>
     </div>
 
     <div id="MODAL-TOKEN" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>GERAR TOKEN</h3>
-            <label>META SERVIÇOS</label><input type="number" id="M-S" value="10000">
+            <h3>GERAR NOVO TOKEN</h3>
+            <label>META SERVIÇOS</label><input type="number" id="M-S" value="15000">
             <label>META PEÇAS</label><input type="number" id="M-P" value="5000">
-            <button class="BTN-MASTER" onclick="gerarToken()">GERAR AGORA</button>
-            <div id="TK-BOX" class="HIDDEN" style="margin-top:15px; text-align:center; border:2px dashed var(--PRIMARY); padding:10px;"><b id="TK-VAL" style="font-size:1.5rem;"></b></div>
+            <button class="BTN-MASTER" onclick="gerarToken()">GERAR TOKEN ÚNICO</button>
+            <div id="TK-BOX" class="HIDDEN" style="margin-top:15px; text-align:center; border:2px dashed var(--PRIMARY); padding:10px;"><b id="TK-VAL" style="font-size:1.5rem; letter-spacing:2px;"></b></div>
             <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">SAIR</button>
         </div>
     </div>
@@ -151,14 +165,18 @@
     }
 
     function tentarLogin() {
-        const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
-        const p = document.getElementById('P-LOGIN').value;
-        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
-        else {
-            const f = users.find(x => x.u === u && x.p === p);
-            if(f) logar(u); else alert("ERRO DE ACESSO!");
-        }
+        const btn = document.getElementById('BTN-ENTRAR');
+        btn.innerText = "CARREGANDO...";
+        setTimeout(() => {
+            const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
+            const p = document.getElementById('P-LOGIN').value;
+            const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+            if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
+            else {
+                const f = users.find(x => x.u === u && x.p === p);
+                if(f) logar(u); else { alert("ACESSO NEGADO!"); btn.innerText = "ENTRAR NO SISTEMA"; }
+            }
+        }, 800);
     }
 
     function logar(nome) {
@@ -176,6 +194,12 @@
     function renderDashboard() {
         let dados = []; let meta = {s:10000, p:10000, g:20000};
         const allUsers = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        
+        document.getElementById('BTN-EDIT-META').classList.add('HIDDEN');
+        if(userLogado === "LEANDRO" && alvoView !== "LEANDRO" && alvoView !== "GLOBAL") {
+            document.getElementById('BTN-EDIT-META').classList.remove('HIDDEN');
+        }
+
         if(alvoView === "GLOBAL") {
             meta = {s:0, p:0, g:0};
             allUsers.forEach(u => {
@@ -188,6 +212,7 @@
             const u = allUsers.find(x => x.u === alvoView) || {metas:meta};
             meta = u.metas;
         }
+
         let s=0, p=0, g=0; const tb = document.getElementById('MAIN-TABLE'); tb.innerHTML = "";
         dados.forEach((item, idx) => {
             const v = parseFloat(item.val) || 0;
@@ -195,10 +220,11 @@
             <td><button onclick="del(${idx})" style="background:none; border:none; color:var(--DANGER); cursor:pointer;"><span class="material-icons-outlined">delete</span></button></td></tr>`;
             g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v;
         });
+
         const updateBar = (id, v, m) => {
             const perc = m > 0 ? Math.min((v / m) * 100, 100) : 0;
             document.getElementById('BAR-'+id).style.width = perc + "%";
-            document.getElementById('VAL-'+id).innerText = `R$ ${v.toLocaleString()}`;
+            document.getElementById('VAL-'+id).innerText = `R$ ${v.toLocaleString()} / ${(m/1000)}K`;
         };
         updateBar('S', s, meta.s); updateBar('P', p, meta.p); updateBar('G', g, meta.g);
     }
@@ -211,20 +237,60 @@
         let storage = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
         storage.push({tipo: document.getElementById('IN-TIPO').value, desc: d, val: v});
         localStorage.setItem('ed_data_'+alvoView, JSON.stringify(storage));
-        
-        // LIMPAR CAMPOS APÓS LANÇAR
-        document.getElementById('IN-DESC').value = "";
-        document.getElementById('IN-VAL').value = "";
-        
+        document.getElementById('IN-DESC').value = ""; document.getElementById('IN-VAL').value = "";
         closeModal('MODAL-ADD'); renderDashboard();
     }
 
+    function abrirEdicaoPerfil() {
+        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        const u = users.find(x => x.u === alvoView) || {u: userLogado, p: "******"};
+        document.getElementById('P-NOME').value = u.u;
+        document.getElementById('P-SENHA').value = u.p;
+        document.getElementById('PERFIL-TIT').innerText = "EDITANDO: " + u.u;
+        openModal('MODAL-PERFIL');
+    }
+
     function salvarPerfil() {
+        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
         const n = document.getElementById('P-NOME').value.toUpperCase().trim();
         const s = document.getElementById('P-SENHA').value;
-        if(!n || !s) return alert("PREENCHA TUDO!");
-        alert("PERFIL ATUALIZADO! FAÇA LOGIN NOVAMENTE.");
-        location.reload();
+        const idx = users.findIndex(x => x.u === alvoView);
+        if(idx !== -1) {
+            users[idx].u = n; users[idx].p = s;
+            localStorage.setItem('euro_users', JSON.stringify(users));
+            alert("DADOS ATUALIZADOS!"); location.reload();
+        }
+    }
+
+    function abrirEdicaoMetas() {
+        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        const u = users.find(x => x.u === alvoView);
+        document.getElementById('EM-S').value = u.metas.s;
+        document.getElementById('EM-P').value = u.metas.p;
+        openModal('MODAL-METAS');
+    }
+
+    function confirmarEdicaoMetas() {
+        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        const idx = users.findIndex(x => x.u === alvoView);
+        const s = Number(document.getElementById('EM-S').value);
+        const p = Number(document.getElementById('EM-P').value);
+        users[idx].metas = { s, p, g: (s + p) };
+        localStorage.setItem('euro_users', JSON.stringify(users));
+        closeModal('MODAL-METAS'); renderDashboard();
+    }
+
+    function tentarRegistro() {
+        const u = document.getElementById('U-REG').value.toUpperCase().trim();
+        const p = document.getElementById('P-REG').value;
+        const t = document.getElementById('T-REG').value.toUpperCase().trim();
+        let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
+        if(!tks[t]) return alert("TOKEN INVÁLIDO!");
+        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        users.push({u, p, metas: tks[t]});
+        localStorage.setItem('euro_users', JSON.stringify(users));
+        delete tks[t]; localStorage.setItem('euro_tks', JSON.stringify(tks));
+        logar(u);
     }
 
     function gerarToken() {
@@ -249,12 +315,7 @@
     function openModal(id) { document.getElementById(id).classList.remove('HIDDEN'); }
     function closeModal(id) { document.getElementById(id).classList.add('HIDDEN'); }
     function switchAuth(b) { document.getElementById('LOGIN-BOX').classList.add('HIDDEN'); document.getElementById('REG-BOX').classList.add('HIDDEN'); document.getElementById(b).classList.remove('HIDDEN'); }
-    function del(idx) {
-        let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-        d.splice(idx, 1);
-        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d));
-        renderDashboard();
-    }
+    function del(idx) { if(confirm("EXCLUIR?")) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); } }
 </script>
 </body>
 </html>
