@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EURO DIESEL - 003-PRO</title>
+    <title>EURO DIESEL - PREMIUM 003</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         :root {
             --BG: #0D1117; --SIDE: #161B22; --CARD: #1C2128; --PRIMARY: #2F81F7;
             --SUCCESS: #238636; --DANGER: #F85149; --TEXT: #C9D1D9; --BORDER: #30363D;
-            --PURPLE: #8957E5; --ORANGE: #D29922;
+            --PURPLE: #8957E5; --ORANGE: #D29922; --CYAN: #00D4FF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--BG); color: var(--TEXT); display: flex; height: 100vh; overflow: hidden; }
@@ -37,28 +37,29 @@
         .BTN-MASTER { background: var(--PRIMARY); color: WHITE; border: none; border-radius: 8px; padding: 18px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
         input, select { width: 100%; padding: 15px; background: #0D1117; border: 1px solid var(--BORDER); border-radius: 8px; color: WHITE; margin-bottom: 15px; font-weight: bold; }
         .MODAL { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
-        .MODAL-CONTENT { background: var(--CARD); padding: 30px; border-radius: 20px; width: 100%; max-width: 420px; border: 1px solid var(--BORDER); }
+        .MODAL-CONTENT { background: var(--CARD); padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid var(--BORDER); max-height: 90vh; overflow-y: auto; }
         .HIDDEN { display: none !important; }
         
-        .ITEM-EXCLUIDO { background: rgba(248, 81, 73, 0.1) !important; color: #888; }
-        .BADGE-DEL { background: var(--DANGER); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; margin-left: 5px; }
+        .REPORT-ITEM { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--BORDER); font-size: 0.85rem; }
+        .ITEM-EXCLUIDO { background: rgba(248, 81, 73, 0.05) !important; color: #666; }
     </style>
 </head>
 <body onkeydown="if(event.key==='Enter') executarEnter()">
 
     <nav id="APP-SIDE" class="SIDEBAR HIDDEN">
-        <div style="font-size: 1.6rem; font-weight: 900; color: var(--PRIMARY); margin-bottom: 30px; text-align: center;">EURO DIESEL</div>
+        <div style="font-size: 1.5rem; font-weight: 900; color: var(--PRIMARY); margin-bottom: 30px; text-align: center;">EURO DIESEL</div>
         <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">PAINEL</div></div>
         
         <div id="MASTER-TOOLS" class="HIDDEN">
-            <div class="ADMIN-LABEL" style="font-size: 0.65rem; color: #555; margin: 20px 10px 10px 10px;">ADMINISTRAÇÃO</div>
-            <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">analytics</span> <div class="NAV-TEXT">VISÃO GERAL</div></div>
-            <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">vpn_key</span> <div class="NAV-TEXT">GERAR CHAVE</div></div>
+            <div class="ADMIN-LABEL" style="font-size: 0.6rem; color: #555; margin: 20px 10px 10px 10px;">MESTRE</div>
+            <div class="NAV-ITEM" style="color: var(--CYAN)" onclick="abrirRelatorios()"><span class="material-icons-outlined">analytics</span> <div class="NAV-TEXT">RELATÓRIOS</div></div>
+            <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">public</span> <div class="NAV-TEXT">VISÃO GERAL</div></div>
+            <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">key</span> <div class="NAV-TEXT">GERAR TOKEN</div></div>
             <div id="LISTA-FUNCS"></div>
         </div>
 
         <div style="margin-top: auto;">
-            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">manage_accounts</span> <div class="NAV-TEXT">CONFIGURAÇÕES</div></div>
+            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person</span> <div class="NAV-TEXT">MEU PERFIL</div></div>
             <div class="NAV-ITEM" style="color: var(--DANGER)" onclick="location.reload()"><span class="material-icons-outlined">logout</span> <div class="NAV-TEXT">SAIR</div></div>
         </div>
     </nav>
@@ -66,22 +67,22 @@
     <div id="APP-MAIN" class="MAIN-WRAPPER HIDDEN">
         <div class="CONTAINER">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1 id="V-TITLE">DASHBOARD</h1>
+                <h1 id="V-TITLE">CONTROLE</h1>
                 <div style="display:flex; gap:10px;">
-                    <button id="BTN-EDIT-META" class="BTN-MASTER HIDDEN" style="background: var(--ORANGE); width: auto; padding: 12px;" onclick="abrirEdicaoMetas()"><span class="material-icons-outlined">edit</span></button>
-                    <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + LANÇAR</button>
+                    <button id="BTN-EDIT-META" class="BTN-MASTER HIDDEN" style="background: var(--ORANGE); width: auto; padding: 12px;" onclick="abrirEdicaoMetas()"><span class="material-icons-outlined">settings</span></button>
+                    <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + NOVO LANÇAMENTO</button>
                 </div>
             </div>
 
             <div class="STATS-GRID">
-                <div class="STAT-CARD"><b>TOTAL GERAL</b> <span id="VAL-G">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-G" class="PROGRESS-FILL" style="background: var(--PURPLE)"></div></div></div>
+                <div class="STAT-CARD"><b>GERAL</b> <span id="VAL-G">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-G" class="PROGRESS-FILL" style="background: var(--PURPLE)"></div></div></div>
                 <div class="STAT-CARD"><b>SERVIÇOS</b> <span id="VAL-S">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-S" class="PROGRESS-FILL" style="background: var(--PRIMARY)"></div></div></div>
                 <div class="STAT-CARD"><b>PEÇAS</b> <span id="VAL-P">R$ 0</span><div class="PROGRESS-BG"><div id="BAR-P" class="PROGRESS-FILL" style="background: var(--SUCCESS)"></div></div></div>
             </div>
 
             <div style="background: var(--CARD); border-radius: 12px; border: 1px solid var(--BORDER); overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
-                    <thead><tr><th style="padding:15px; text-align:left; border-bottom:1px solid var(--BORDER);">TIPO</th><th style="padding:15px; text-align:left; border-bottom:1px solid var(--BORDER);">DESCRIÇÃO / QUEM</th><th style="padding:15px; text-align:left; border-bottom:1px solid var(--BORDER);">VALOR</th><th style="padding:15px; text-align:left; border-bottom:1px solid var(--BORDER);">AÇÕES</th></tr></thead>
+                    <thead><tr><th style="padding:15px; text-align:left;">TIPO</th><th style="padding:15px; text-align:left;">DESCRIÇÃO</th><th style="padding:15px; text-align:left;">VALOR</th><th style="padding:15px; text-align:left;">AÇÕES</th></tr></thead>
                     <tbody id="MAIN-TABLE"></tbody>
                 </table>
             </div>
@@ -99,57 +100,57 @@
 
         <div id="REG-BOX" class="MODAL-CONTENT HIDDEN">
             <h2 style="text-align:center; color: var(--SUCCESS);">CADASTRO</h2>
-            <input type="text" id="U-REG" placeholder="NOME DO COLABORADOR">
-            <input type="password" id="P-REG" placeholder="CRIE UMA SENHA">
-            <input type="text" id="T-REG" placeholder="CHAVE (TOKEN) OBRIGATÓRIA">
+            <input type="text" id="U-REG" placeholder="NOME DO FUNCIONÁRIO">
+            <input type="password" id="P-REG" placeholder="CRIE SUA SENHA">
+            <input type="text" id="T-REG" placeholder="DIGITE O TOKEN">
             <button id="BTN-CADASTRAR" class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">ATIVAR E ENTRAR</button>
-            <button class="BTN-MASTER" style="background:transparent; border:1px solid var(--PRIMARY); color:var(--PRIMARY); margin-top:10px; font-size: 0.75rem;" onclick="window.open('https://wa.me/SEUNUMERO?text=PRECISO%20DE%20UM%20TOKEN')">SOLICITAR TOKEN PARA LEANDRO</button>
-            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:15px; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR</button>
+            
+            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 10px; font-size: 0.8rem;" onclick="window.open('https://wa.me/SEUNUMERO?text=OLA%20LEANDRO%20PRECISO%20DE%20UM%20TOKEN')">OBTER TOKEN</button>
+            
+            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:15px; cursor:pointer; font-weight:bold;" onclick="switchAuth('LOGIN-BOX')">VOLTAR AO LOGIN</button>
+        </div>
+    </div>
+
+    <div id="MODAL-REPORTS" class="MODAL HIDDEN">
+        <div class="MODAL-CONTENT">
+            <h2 style="color: var(--CYAN); text-align:center;">RELATÓRIOS MESTRE</h2>
+            <h4 style="color:var(--PRIMARY)">🏆 RANKING GERAL</h4><div id="REP-RANKING"></div>
+            <h4 style="color:var(--DANGER); margin-top:15px;">🗑️ ITENS APAGADOS</h4><div id="REP-DELETES"></div>
+            <h4 style="color:var(--SUCCESS); margin-top:15px;">📊 TICKET MÉDIO</h4><div id="REP-TICKET"></div>
+            <button class="BTN-MASTER" style="margin-top:20px; background:var(--DANGER);" onclick="limparSistemaGeral()">ZERAR TODOS OS DADOS</button>
+            <button class="BTN-MASTER" style="margin-top:10px; background:#444;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button>
         </div>
     </div>
 
     <div id="MODAL-ADD" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>LANÇAR ITEM</h3>
+            <h3>LANÇAR VENDA</h3>
             <select id="IN-TIPO"><option value="SERVIÇO">SERVIÇO</option><option value="PEÇA">PEÇA</option></select>
-            <input type="text" id="IN-DESC" placeholder="DESCRIÇÃO (EX: TROCA DE ÓLEO)">
+            <input type="text" id="IN-DESC" placeholder="DESCRIÇÃO">
             <input type="number" id="IN-VAL" placeholder="VALOR R$">
-            <button id="BTN-SALVAR-ITEM" class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-ADD')">FECHAR</button>
-        </div>
-    </div>
-
-    <div id="MODAL-METAS" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h3>AJUSTAR METAS</h3>
-            <label>SERVIÇOS R$</label><input type="number" id="EM-S">
-            <label>PEÇAS R$</label><input type="number" id="EM-P">
-            <label>GERAL R$</label><input type="number" id="EM-G">
-            <button class="BTN-MASTER" style="background:var(--SUCCESS)" onclick="confirmarEdicaoMetas()">SALVAR METAS</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-METAS')">CANCELAR</button>
+            <button class="BTN-MASTER" style="background: var(--SUCCESS);" onclick="salvarItem()">CONFIRMAR</button>
+            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-ADD')">CANCELAR</button>
         </div>
     </div>
 
     <div id="MODAL-TOKEN" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>GERAR CHAVE MESTRA</h3>
-            <input type="number" id="M-S" value="15000" placeholder="META SERVIÇOS">
-            <input type="number" id="M-P" value="5000" placeholder="META PEÇAS">
-            <input type="number" id="M-G" value="20000" placeholder="META GERAL">
-            <button class="BTN-MASTER" onclick="gerarToken()">GERAR CHAVE ÚNICA</button>
-            <div id="TK-BOX" class="HIDDEN" style="margin-top:15px; text-align:center; border:2px dashed var(--PRIMARY); padding:15px; border-radius:10px; background:#000;">
-                <b id="TK-VAL" style="font-size:1rem; color:WHITE; font-family:monospace;"></b>
-            </div>
+            <h3>NOVA CHAVE</h3>
+            <label>SERVIÇOS</label><input type="number" id="M-S" value="15000">
+            <label>PEÇAS</label><input type="number" id="M-P" value="5000">
+            <label>GERAL</label><input type="number" id="M-G" value="20000">
+            <button class="BTN-MASTER" onclick="gerarToken()">GERAR TOKEN</button>
+            <div id="TK-BOX" class="HIDDEN" style="margin-top:10px; text-align:center; border:1px dashed var(--PRIMARY); padding:10px;"><b id="TK-VAL"></b></div>
             <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button>
         </div>
     </div>
 
     <div id="MODAL-PERFIL" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3 id="PERFIL-TIT">EDITAR PERFIL</h3>
-            <label>NOME:</label><input type="text" id="P-NOME">
-            <label>SENHA:</label><input type="text" id="P-SENHA">
-            <button class="BTN-MASTER" onclick="salvarPerfil()">ATUALIZAR DADOS</button>
+            <h3>EDITAR CONTA</h3>
+            <input type="text" id="P-NOME" placeholder="NOME">
+            <input type="text" id="P-SENHA" placeholder="SENHA">
+            <button class="BTN-MASTER" onclick="salvarPerfil()">SALVAR</button>
             <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">CANCELAR</button>
         </div>
     </div>
@@ -168,8 +169,7 @@
     }
 
     function tentarLogin() {
-        const btn = document.getElementById('BTN-ENTRAR');
-        btn.innerText = "CARREGANDO...";
+        const btn = document.getElementById('BTN-ENTRAR'); btn.innerText = "CARREGANDO...";
         setTimeout(() => {
             const u = document.getElementById('U-LOGIN').value.toUpperCase().trim();
             const p = document.getElementById('P-LOGIN').value;
@@ -177,7 +177,7 @@
             if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
             else {
                 const f = users.find(x => x.u === u && x.p === p);
-                if(f) logar(u); else { alert("ACESSO NEGADO!"); btn.innerText = "ENTRAR"; }
+                if(f) logar(u); else { alert("USUÁRIO OU SENHA INCORRETO!"); btn.innerText = "ENTRAR"; }
             }
         }, 700);
     }
@@ -187,10 +187,7 @@
         document.getElementById('AUTH-SCREEN').classList.add('HIDDEN');
         document.getElementById('APP-SIDE').classList.remove('HIDDEN');
         document.getElementById('APP-MAIN').classList.remove('HIDDEN');
-        if(nome === "LEANDRO") {
-            document.getElementById('MASTER-TOOLS').classList.remove('HIDDEN');
-            atualizarListaMaster();
-        }
+        if(nome === "LEANDRO") { document.getElementById('MASTER-TOOLS').classList.remove('HIDDEN'); atualizarListaMaster(); }
         renderDashboard();
     }
 
@@ -198,7 +195,6 @@
         let dadosRaw = []; let meta = {s:10000, p:10000, g:20000};
         const allUsers = JSON.parse(localStorage.getItem('euro_users') || "[]");
         document.getElementById('BTN-EDIT-META').classList.add('HIDDEN');
-        
         if(userLogado === "LEANDRO" && alvoView !== "LEANDRO" && alvoView !== "GLOBAL") document.getElementById('BTN-EDIT-META').classList.remove('HIDDEN');
 
         if(alvoView === "GLOBAL") {
@@ -215,30 +211,16 @@
         }
 
         let s=0, p=0, g=0; const tb = document.getElementById('MAIN-TABLE'); tb.innerHTML = "";
-        
         dadosRaw.sort((a,b) => b.val - a.val).forEach((item, idx) => {
             const v = parseFloat(item.val) || 0;
-            const isExcluido = item.excluido === true;
+            if(userLogado !== "LEANDRO" && item.excluido) return;
+            if(!item.excluido) { g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v; }
             
-            // FILTRO: Se não for ADM, não vê o que excluiu
-            if(userLogado !== "LEANDRO" && isExcluido) return;
-
-            // Só soma se NÃO estiver excluído
-            if(!isExcluido) {
-                g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v;
-            }
-
-            const rowClass = isExcluido ? 'ITEM-EXCLUIDO' : '';
-            const badge = isExcluido ? '<span class="BADGE-DEL">EXCLUÍDO POR ELE</span>' : '';
-            const acao = userLogado === "LEANDRO" 
-                ? `<button onclick="eliminarDefinitivo('${item.dono || alvoView}', ${idx})" style="color:var(--DANGER); background:none; border:none; cursor:pointer;"><span class="material-icons-outlined">delete_forever</span></button>` 
-                : `<button onclick="excluirTemporario(${idx})" style="color:var(--DANGER); background:none; border:none; cursor:pointer;"><span class="material-icons-outlined">delete</span></button>`;
-
-            tb.innerHTML += `<tr class="${rowClass}">
+            tb.innerHTML += `<tr class="${item.excluido ? 'ITEM-EXCLUIDO' : ''}">
                 <td><b>${item.tipo}</b></td>
-                <td>${item.desc} ${item.dono ? '<br><small>POR: '+item.dono+'</small>' : ''} ${badge}</td>
+                <td>${item.desc} ${item.dono ? '<br><small>('+item.dono+')</small>' : ''}</td>
                 <td>R$ ${v.toLocaleString()}</td>
-                <td>${acao}</td>
+                <td>${userLogado === "LEANDRO" ? `<button onclick="eliminarDefinitivo('${item.dono || alvoView}', ${idx})">❌</button>` : `<button onclick="excluirTemp(${idx})">🗑️</button>`}</td>
             </tr>`;
         });
 
@@ -250,104 +232,65 @@
         updateBar('S', s, meta.s); updateBar('P', p, meta.p); updateBar('G', g, meta.g);
     }
 
-    // EXCLUIR PARA O USUÁRIO (LIXEIRA FANTASMA)
-    function excluirTemporario(idx) {
-        if(confirm("DESEJA REALMENTE EXCLUIR ESTE ITEM?")) {
-            let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-            d[idx].excluido = true;
-            localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d));
-            renderDashboard();
-        }
-    }
-
-    // ELIMINAR DO MAPA (SÓ LEANDRO)
-    function eliminarDefinitivo(dono, idx) {
-        if(confirm("LEANDRO, ELIMINAR ESTE ITEM PARA SEMPRE DO SISTEMA?")) {
-            let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]");
-            d.splice(idx, 1);
-            localStorage.setItem('ed_data_'+dono, JSON.stringify(d));
-            renderDashboard();
-        }
-    }
-
-    function salvarItem() {
-        const d = document.getElementById('IN-DESC').value.toUpperCase();
-        const v = document.getElementById('IN-VAL').value;
-        if(!d || !v) return;
-        sound.play();
-        let storage = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
-        storage.push({tipo: document.getElementById('IN-TIPO').value, desc: d, val: v, excluido: false});
-        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(storage));
-        document.getElementById('IN-DESC').value = ""; document.getElementById('IN-VAL').value = "";
-        closeModal('MODAL-ADD'); renderDashboard();
-    }
-
-    // FUNÇÕES DE APOIO MANTIDAS DA 003
-    function abrirEdicaoPerfil() {
+    function abrirRelatorios() {
         const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        const u = users.find(x => x.u === alvoView) || {u: userLogado, p: "******"};
-        document.getElementById('P-NOME').value = u.u; document.getElementById('P-SENHA').value = u.p;
-        openModal('MODAL-PERFIL');
+        let rankHTML = ""; let delHTML = ""; let tickHTML = "";
+        users.forEach(u => {
+            const d = JSON.parse(localStorage.getItem('ed_data_' + u.u) || "[]");
+            const ativos = d.filter(x => !x.excluido);
+            const total = ativos.reduce((acc, curr) => acc + Number(curr.val), 0);
+            const deletados = d.filter(x => x.excluido).length;
+            const media = total > 0 ? (total / ativos.length).toFixed(2) : 0;
+            rankHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b>R$ ${total.toLocaleString()}</b></div>`;
+            delHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b style="color:var(--DANGER)">${deletados} APAGADOS</b></div>`;
+            tickHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b>R$ ${Number(media).toLocaleString()} / VENDA</b></div>`;
+        });
+        document.getElementById('REP-RANKING').innerHTML = rankHTML || "SEM DADOS";
+        document.getElementById('REP-DELETES').innerHTML = delHTML || "SEM DADOS";
+        document.getElementById('REP-TICKET').innerHTML = tickHTML || "SEM DADOS";
+        openModal('MODAL-REPORTS');
     }
 
-    function salvarPerfil() {
-        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        const n = document.getElementById('P-NOME').value.toUpperCase().trim();
-        const s = document.getElementById('P-SENHA').value;
-        const idx = users.findIndex(x => x.u === alvoView);
-        if(idx !== -1) { users[idx].u = n; users[idx].p = s; localStorage.setItem('euro_users', JSON.stringify(users)); location.reload(); }
+    function limparSistemaGeral() {
+        if(confirm("LEANDRO, ISSO APAGARÁ TUDO! CONFIRMA?")) {
+            const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+            users.forEach(u => localStorage.setItem('ed_data_' + u.u, "[]"));
+            renderDashboard(); closeModal('MODAL-REPORTS');
+        }
     }
 
+    function excluirTemp(idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d[idx].excluido = true; localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); }
+    function eliminarDefinitivo(dono, idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+dono, JSON.stringify(d)); renderDashboard(); }
+    function salvarItem() {
+        const d = document.getElementById('IN-DESC').value.toUpperCase(); const v = document.getElementById('IN-VAL').value; if(!d || !v) return;
+        sound.play(); let s = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]");
+        s.push({tipo: document.getElementById('IN-TIPO').value, desc: d, val: v, excluido: false});
+        localStorage.setItem('ed_data_'+alvoView, JSON.stringify(s)); document.getElementById('IN-DESC').value = ""; document.getElementById('IN-VAL').value = ""; closeModal('MODAL-ADD'); renderDashboard();
+    }
     function gerarToken() {
-        const gen = () => Math.random().toString(36).substr(2, 4).toUpperCase();
-        const tk = `EURO-${gen()}-${gen()}-${gen()}`;
+        const tk = `EURO-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
         let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
         tks[tk] = { s: document.getElementById('M-S').value, p: document.getElementById('M-P').value, g: document.getElementById('M-G').value };
-        localStorage.setItem('euro_tks', JSON.stringify(tks));
-        document.getElementById('TK-VAL').innerText = tk; document.getElementById('TK-BOX').classList.remove('HIDDEN');
+        localStorage.setItem('euro_tks', JSON.stringify(tks)); document.getElementById('TK-VAL').innerText = tk; document.getElementById('TK-BOX').classList.remove('HIDDEN');
     }
-
     function tentarRegistro() {
-        const u = document.getElementById('U-REG').value.toUpperCase().trim();
-        const p = document.getElementById('P-REG').value;
-        const t = document.getElementById('T-REG').value.toUpperCase().trim();
-        let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}");
-        if(!tks[t]) return alert("TOKEN INVÁLIDO!");
-        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        users.push({u, p, metas: tks[t]});
-        localStorage.setItem('euro_users', JSON.stringify(users));
-        delete tks[t]; localStorage.setItem('euro_tks', JSON.stringify(tks));
-        logar(u);
+        const u = document.getElementById('U-REG').value.toUpperCase().trim(); const p = document.getElementById('P-REG').value; const t = document.getElementById('T-REG').value.toUpperCase().trim();
+        let tks = JSON.parse(localStorage.getItem('euro_tks') || "{}"); if(!tks[t]) return alert("TOKEN INVÁLIDO!");
+        let users = JSON.parse(localStorage.getItem('euro_users') || "[]"); users.push({u, p, metas: tks[t]});
+        localStorage.setItem('euro_users', JSON.stringify(users)); delete tks[t]; localStorage.setItem('euro_tks', JSON.stringify(tks)); logar(u);
     }
-
-    function abrirEdicaoMetas() {
-        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        const u = users.find(x => x.u === alvoView);
-        document.getElementById('EM-S').value = u.metas.s; document.getElementById('EM-P').value = u.metas.p; document.getElementById('EM-G').value = u.metas.g;
-        openModal('MODAL-METAS');
-    }
-
-    function confirmarEdicaoMetas() {
-        let users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        const idx = users.findIndex(x => x.u === alvoView);
-        users[idx].metas = { s: Number(document.getElementById('EM-S').value), p: Number(document.getElementById('EM-P').value), g: Number(document.getElementById('EM-G').value) };
-        localStorage.setItem('euro_users', JSON.stringify(users));
-        closeModal('MODAL-METAS'); renderDashboard();
-    }
-
     function atualizarListaMaster() {
-        const nav = document.getElementById('LISTA-FUNCS');
-        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-        nav.innerHTML = "";
+        const nav = document.getElementById('LISTA-FUNCS'); const users = JSON.parse(localStorage.getItem('euro_users') || "[]"); nav.innerHTML = "";
         users.forEach(u => nav.innerHTML += `<div class="NAV-ITEM" onclick="carregarVisaoUser('${u.u}')"><span class="material-icons-outlined">account_circle</span> <div class="NAV-TEXT">${u.u}</div></div>`);
     }
-
     function carregarVisaoUser(n) { alvoView = n; document.getElementById('V-TITLE').innerText = "VISTA: " + n; renderDashboard(); }
-    function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "GERAL BRASIL"; renderDashboard(); }
+    function carregarVisaoGlobal() { alvoView = "GLOBAL"; document.getElementById('V-TITLE').innerText = "VISÃO GLOBAL"; renderDashboard(); }
     function carregarVisaoPropria() { alvoView = userLogado; document.getElementById('V-TITLE').innerText = "DASHBOARD"; renderDashboard(); }
     function openModal(id) { document.getElementById(id).classList.remove('HIDDEN'); }
     function closeModal(id) { document.getElementById(id).classList.add('HIDDEN'); }
     function switchAuth(b) { document.getElementById('LOGIN-BOX').classList.add('HIDDEN'); document.getElementById('REG-BOX').classList.add('HIDDEN'); document.getElementById(b).classList.remove('HIDDEN'); }
+    function abrirEdicaoPerfil() { const users = JSON.parse(localStorage.getItem('euro_users') || "[]"); const u = users.find(x => x.u === alvoView) || {u: userLogado, p: "******"}; document.getElementById('P-NOME').value = u.u; document.getElementById('P-SENHA').value = u.p; openModal('MODAL-PERFIL'); }
+    function salvarPerfil() { let users = JSON.parse(localStorage.getItem('euro_users') || "[]"); const n = document.getElementById('P-NOME').value.toUpperCase().trim(); const s = document.getElementById('P-SENHA').value; const idx = users.findIndex(x => x.u === alvoView); if(idx !== -1) { users[idx].u = n; users[idx].p = s; localStorage.setItem('euro_users', JSON.stringify(users)); location.reload(); } }
 </script>
 </body>
 </html>
