@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EURO DIESEL - PREMIUM 003</title>
+    <title>EURO DIESEL - ULTIMATE</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         :root {
             --BG: #0D1117; --SIDE: #161B22; --CARD: #1C2128; --PRIMARY: #2F81F7;
             --SUCCESS: #238636; --DANGER: #F85149; --TEXT: #C9D1D9; --BORDER: #30363D;
-            --PURPLE: #8957E5; --ORANGE: #D29922; --CYAN: #00D4FF;
+            --PURPLE: #8957E5; --CYAN: #00D4FF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; text-transform: uppercase; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--BG); color: var(--TEXT); display: flex; height: 100vh; overflow: hidden; }
@@ -48,18 +48,18 @@
 
     <nav id="APP-SIDE" class="SIDEBAR HIDDEN">
         <div style="font-size: 1.5rem; font-weight: 900; color: var(--PRIMARY); margin-bottom: 30px; text-align: center;">EURO DIESEL</div>
-        <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">PAINEL</div></div>
+        <div class="NAV-ITEM ACTIVE" onclick="carregarVisaoPropria()"><span class="material-icons-outlined">dashboard</span> <div class="NAV-TEXT">DASHBOARD</div></div>
         
         <div id="MASTER-TOOLS" class="HIDDEN">
             <div class="ADMIN-LABEL" style="font-size: 0.6rem; color: #555; margin: 20px 10px 10px 10px;">MESTRE</div>
-            <div class="NAV-ITEM" style="color: var(--CYAN)" onclick="abrirRelatorios()"><span class="material-icons-outlined">analytics</span> <div class="NAV-TEXT">RELATÓRIOS</div></div>
+            <div class="NAV-ITEM" style="color: var(--CYAN)" onclick="abrirRelatorios()"><span class="material-icons-outlined">assessment</span> <div class="NAV-TEXT">RELATÓRIOS</div></div>
             <div class="NAV-ITEM" style="color: var(--PURPLE)" onclick="carregarVisaoGlobal()"><span class="material-icons-outlined">public</span> <div class="NAV-TEXT">VISÃO GERAL</div></div>
             <div class="NAV-ITEM" onclick="openModal('MODAL-TOKEN')"><span class="material-icons-outlined">key</span> <div class="NAV-TEXT">GERAR TOKEN</div></div>
             <div id="LISTA-FUNCS"></div>
         </div>
 
         <div style="margin-top: auto;">
-            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person</span> <div class="NAV-TEXT">MEU PERFIL</div></div>
+            <div class="NAV-ITEM" onclick="abrirEdicaoPerfil()"><span class="material-icons-outlined">person</span> <div class="NAV-TEXT">CONTA</div></div>
             <div class="NAV-ITEM" style="color: var(--DANGER)" onclick="location.reload()"><span class="material-icons-outlined">logout</span> <div class="NAV-TEXT">SAIR</div></div>
         </div>
     </nav>
@@ -67,10 +67,10 @@
     <div id="APP-MAIN" class="MAIN-WRAPPER HIDDEN">
         <div class="CONTAINER">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1 id="V-TITLE">CONTROLE</h1>
+                <h1 id="V-TITLE">DASHBOARD</h1>
                 <div style="display:flex; gap:10px;">
                     <button id="BTN-EDIT-META" class="BTN-MASTER HIDDEN" style="background: var(--ORANGE); width: auto; padding: 12px;" onclick="abrirEdicaoMetas()"><span class="material-icons-outlined">settings</span></button>
-                    <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + NOVO LANÇAMENTO</button>
+                    <button class="BTN-MASTER" style="width: auto; padding: 12px 25px;" onclick="openModal('MODAL-ADD')"> + LANÇAR</button>
                 </div>
             </div>
 
@@ -89,6 +89,23 @@
         </div>
     </div>
 
+    <div id="MODAL-REPORTS" class="MODAL HIDDEN">
+        <div class="MODAL-CONTENT">
+            <h2 style="color: var(--CYAN); text-align:center;">RELATÓRIOS MESTRE</h2>
+            
+            <button class="BTN-MASTER" style="background: var(--SUCCESS); margin-bottom: 20px;" onclick="exportarCSV()">
+                <span class="material-icons-outlined">download</span> EXPORTAR PARA EXCEL (.CSV)
+            </button>
+
+            <h4 style="color:var(--PRIMARY)">🏆 RANKING GERAL</h4><div id="REP-RANKING"></div>
+            <h4 style="color:var(--DANGER); margin-top:15px;">🗑️ ITENS APAGADOS</h4><div id="REP-DELETES"></div>
+            <h4 style="color:var(--SUCCESS); margin-top:15px;">📊 TICKET MÉDIO</h4><div id="REP-TICKET"></div>
+            
+            <button class="BTN-MASTER" style="margin-top:20px; background:var(--DANGER); font-size: 0.7rem;" onclick="limparSistemaGeral()">LIMPAR TODOS OS DADOS</button>
+            <button class="BTN-MASTER" style="margin-top:10px; background:#444;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button>
+        </div>
+    </div>
+
     <div id="AUTH-SCREEN" class="MODAL">
         <div id="LOGIN-BOX" class="MODAL-CONTENT">
             <h1 style="color: var(--PRIMARY); text-align:center;">EURO DIESEL</h1>
@@ -100,31 +117,18 @@
 
         <div id="REG-BOX" class="MODAL-CONTENT HIDDEN">
             <h2 style="text-align:center; color: var(--SUCCESS);">CADASTRO</h2>
-            <input type="text" id="U-REG" placeholder="NOME DO FUNCIONÁRIO">
-            <input type="password" id="P-REG" placeholder="CRIE SUA SENHA">
-            <input type="text" id="T-REG" placeholder="DIGITE O TOKEN">
+            <input type="text" id="U-REG" placeholder="NOME">
+            <input type="password" id="P-REG" placeholder="SENHA">
+            <input type="text" id="T-REG" placeholder="TOKEN">
             <button id="BTN-CADASTRAR" class="BTN-MASTER" style="background: var(--SUCCESS)" onclick="tentarRegistro()">ATIVAR E ENTRAR</button>
-            
-            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 10px; font-size: 0.8rem;" onclick="window.open('https://wa.me/SEUNUMERO?text=OLA%20LEANDRO%20PRECISO%20DE%20UM%20TOKEN')">OBTER TOKEN</button>
-            
-            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:15px; cursor:pointer; font-weight:bold;" onclick="switchAuth('LOGIN-BOX')">VOLTAR AO LOGIN</button>
-        </div>
-    </div>
-
-    <div id="MODAL-REPORTS" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h2 style="color: var(--CYAN); text-align:center;">RELATÓRIOS MESTRE</h2>
-            <h4 style="color:var(--PRIMARY)">🏆 RANKING GERAL</h4><div id="REP-RANKING"></div>
-            <h4 style="color:var(--DANGER); margin-top:15px;">🗑️ ITENS APAGADOS</h4><div id="REP-DELETES"></div>
-            <h4 style="color:var(--SUCCESS); margin-top:15px;">📊 TICKET MÉDIO</h4><div id="REP-TICKET"></div>
-            <button class="BTN-MASTER" style="margin-top:20px; background:var(--DANGER);" onclick="limparSistemaGeral()">ZERAR TODOS OS DADOS</button>
-            <button class="BTN-MASTER" style="margin-top:10px; background:#444;" onclick="closeModal('MODAL-REPORTS')">FECHAR</button>
+            <button class="BTN-MASTER" style="background: transparent; border: 1px solid var(--CYAN); color: var(--CYAN); margin-top: 10px; font-size: 0.8rem;" onclick="window.open('https://wa.me/SEUNUMERO?text=TOKEN%20EURO%20DIESEL')">OBTER TOKEN</button>
+            <button style="width:100%; background:none; border:none; color:var(--DANGER); margin-top:15px; cursor:pointer;" onclick="switchAuth('LOGIN-BOX')">VOLTAR</button>
         </div>
     </div>
 
     <div id="MODAL-ADD" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>LANÇAR VENDA</h3>
+            <h3>LANÇAR</h3>
             <select id="IN-TIPO"><option value="SERVIÇO">SERVIÇO</option><option value="PEÇA">PEÇA</option></select>
             <input type="text" id="IN-DESC" placeholder="DESCRIÇÃO">
             <input type="number" id="IN-VAL" placeholder="VALOR R$">
@@ -135,23 +139,11 @@
 
     <div id="MODAL-TOKEN" class="MODAL HIDDEN">
         <div class="MODAL-CONTENT">
-            <h3>NOVA CHAVE</h3>
-            <label>SERVIÇOS</label><input type="number" id="M-S" value="15000">
-            <label>PEÇAS</label><input type="number" id="M-P" value="5000">
-            <label>GERAL</label><input type="number" id="M-G" value="20000">
-            <button class="BTN-MASTER" onclick="gerarToken()">GERAR TOKEN</button>
+            <h3>GERAR CHAVE</h3>
+            <input type="number" id="M-S" value="15000"> <input type="number" id="M-P" value="5000"> <input type="number" id="M-G" value="20000">
+            <button class="BTN-MASTER" onclick="gerarToken()">GERAR</button>
             <div id="TK-BOX" class="HIDDEN" style="margin-top:10px; text-align:center; border:1px dashed var(--PRIMARY); padding:10px;"><b id="TK-VAL"></b></div>
             <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-TOKEN')">FECHAR</button>
-        </div>
-    </div>
-
-    <div id="MODAL-PERFIL" class="MODAL HIDDEN">
-        <div class="MODAL-CONTENT">
-            <h3>EDITAR CONTA</h3>
-            <input type="text" id="P-NOME" placeholder="NOME">
-            <input type="text" id="P-SENHA" placeholder="SENHA">
-            <button class="BTN-MASTER" onclick="salvarPerfil()">SALVAR</button>
-            <button style="width:100%; background:none; border:none; color:WHITE; margin-top:10px; cursor:pointer;" onclick="closeModal('MODAL-PERFIL')">CANCELAR</button>
         </div>
     </div>
 
@@ -159,13 +151,36 @@
     let userLogado = ""; let alvoView = "";
     const sound = new Audio('https://www.myinstants.com/media/sounds/cash-register-purchase.mp3');
 
+    // EXPORTAR PARA CSV
+    function exportarCSV() {
+        const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
+        let csvContent = "DATA;QUEM;TIPO;DESCRICAO;VALOR;STATUS\n";
+
+        users.forEach(u => {
+            const d = JSON.parse(localStorage.getItem('ed_data_' + u.u) || "[]");
+            d.forEach(item => {
+                const status = item.excluido ? "APAGADO" : "ATIVO";
+                csvContent += `--;${u.u};${item.tipo};${item.desc};${item.val};${status}\n`;
+            });
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `RELATORIO_EURO_DIESEL_${new Date().toLocaleDateString()}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // LÓGICA DO SISTEMA
     function executarEnter() {
         if (!document.getElementById('AUTH-SCREEN').classList.contains('HIDDEN')) {
             if (!document.getElementById('LOGIN-BOX').classList.contains('HIDDEN')) tentarLogin();
             else tentarRegistro();
-        } else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) {
-            salvarItem();
-        }
+        } else if (!document.getElementById('MODAL-ADD').classList.contains('HIDDEN')) salvarItem();
     }
 
     function tentarLogin() {
@@ -177,7 +192,7 @@
             if(u === "LEANDRO" && p === "12344321") logar("LEANDRO");
             else {
                 const f = users.find(x => x.u === u && x.p === p);
-                if(f) logar(u); else { alert("USUÁRIO OU SENHA INCORRETO!"); btn.innerText = "ENTRAR"; }
+                if(f) logar(u); else { alert("ACESSO NEGADO!"); btn.innerText = "ENTRAR"; }
             }
         }, 700);
     }
@@ -215,7 +230,6 @@
             const v = parseFloat(item.val) || 0;
             if(userLogado !== "LEANDRO" && item.excluido) return;
             if(!item.excluido) { g += v; if(item.tipo === 'SERVIÇO') s += v; else p += v; }
-            
             tb.innerHTML += `<tr class="${item.excluido ? 'ITEM-EXCLUIDO' : ''}">
                 <td><b>${item.tipo}</b></td>
                 <td>${item.desc} ${item.dono ? '<br><small>('+item.dono+')</small>' : ''}</td>
@@ -242,23 +256,16 @@
             const deletados = d.filter(x => x.excluido).length;
             const media = total > 0 ? (total / ativos.length).toFixed(2) : 0;
             rankHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b>R$ ${total.toLocaleString()}</b></div>`;
-            delHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b style="color:var(--DANGER)">${deletados} APAGADOS</b></div>`;
-            tickHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b>R$ ${Number(media).toLocaleString()} / VENDA</b></div>`;
+            delHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b style="color:var(--DANGER)">${deletados}</b></div>`;
+            tickHTML += `<div class="REPORT-ITEM"><span>${u.u}</span> <b>R$ ${Number(media).toLocaleString()}</b></div>`;
         });
-        document.getElementById('REP-RANKING').innerHTML = rankHTML || "SEM DADOS";
-        document.getElementById('REP-DELETES').innerHTML = delHTML || "SEM DADOS";
-        document.getElementById('REP-TICKET').innerHTML = tickHTML || "SEM DADOS";
+        document.getElementById('REP-RANKING').innerHTML = rankHTML;
+        document.getElementById('REP-DELETES').innerHTML = delHTML;
+        document.getElementById('REP-TICKET').innerHTML = tickHTML;
         openModal('MODAL-REPORTS');
     }
 
-    function limparSistemaGeral() {
-        if(confirm("LEANDRO, ISSO APAGARÁ TUDO! CONFIRMA?")) {
-            const users = JSON.parse(localStorage.getItem('euro_users') || "[]");
-            users.forEach(u => localStorage.setItem('ed_data_' + u.u, "[]"));
-            renderDashboard(); closeModal('MODAL-REPORTS');
-        }
-    }
-
+    function limparSistemaGeral() { if(confirm("LIMPAR TUDO?")) { const users = JSON.parse(localStorage.getItem('euro_users') || "[]"); users.forEach(u => localStorage.setItem('ed_data_' + u.u, "[]")); renderDashboard(); closeModal('MODAL-REPORTS'); } }
     function excluirTemp(idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+alvoView) || "[]"); d[idx].excluido = true; localStorage.setItem('ed_data_'+alvoView, JSON.stringify(d)); renderDashboard(); }
     function eliminarDefinitivo(dono, idx) { let d = JSON.parse(localStorage.getItem('ed_data_'+dono) || "[]"); d.splice(idx, 1); localStorage.setItem('ed_data_'+dono, JSON.stringify(d)); renderDashboard(); }
     function salvarItem() {
